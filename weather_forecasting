@@ -1,0 +1,42 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+data = {
+    'Temperature': [30, 25, 28, 32, 27, 24, 29, 31, 26, 33],
+    'Humidity': [70, 80, 65, 55, 75, 85, 60, 50, 78, 45],
+    'WindSpeed': [15, 12, 20, 18, 10, 8, 22, 19, 14, 17],
+    'Pressure': [1012, 1008, 1010, 1015, 1009, 1013, 1011, 1014, 1007, 1016],
+    'Rainfall': [5, 10, 0, 2, 8, 12, 1, 0, 9, 3] 
+}
+
+df = pd.DataFrame(data)
+
+X = df[['Temperature', 'Humidity', 'WindSpeed', 'Pressure']]  
+y = df['Rainfall']  
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse}")
+
+results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+print("\nPredictions vs Actual:")
+print(results)
+
+plt.figure(figsize=(8, 5))
+plt.plot(y_test.values, label='Actual', marker='o', linestyle='-', color='blue')
+plt.plot(y_pred, label='Predicted', marker='x', linestyle='--', color='orange')
+plt.title('Actual vs Predicted Rainfall')
+plt.xlabel('Data Points')
+plt.ylabel('Rainfall (mm)')
+plt.legend()
+plt.grid()
+plt.show()
